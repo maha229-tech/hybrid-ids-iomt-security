@@ -1,0 +1,29 @@
+
+=== INSTRUCTIONS POUR RÉUTILISATION ===
+
+Pour utiliser ce modèle dans un consumer Kafka, vous aurez besoin de :
+
+1. MODÈLE ENTRAÎNÉ:
+   - model_artifacts/best_model_advanced.h5 (ou final_model.h5)
+
+2. PREPROCESSING:
+   - model_artifacts/label_encoders.pkl (encodeurs des colonnes catégorielles)
+   - model_artifacts/attack_label_encoder.pkl (encodeur de la variable cible)
+   - model_artifacts/feature_scaler.pkl (normaliseur des features)
+   - model_artifacts/feature_columns.json (liste des features)
+
+3. PARAMÈTRES:
+   - model_artifacts/sequence_parameters.json (params des séquences)
+   - model_artifacts/model_parameters.json (architecture du modèle)
+   - model_artifacts/final_data_statistics.json (stats des données)
+
+4. INFORMATIONS:
+   - model_artifacts/feature_engineering_info.json (formules des features dérivées)
+   - model_artifacts/encoding_info.json (mapping des encodages)
+   - model_artifacts/attack_class_mapping.json (mapping des classes d'attaque)
+
+Le consumer devra :
+1. Charger tous ces artefacts
+2. Appliquer le même preprocessing aux nouvelles données
+3. Créer des séquences de la même longueur
+4. Faire les prédictions avec le modèle

@@ -1,0 +1,8 @@
+{
+  "original_accuracy": 0.6817,
+  "improved_accuracy": 0.13793103448275862,
+  "improvement": -0.5437689655172413,
+  "improvement_percentage": -79.76660782121773,
+  "target_reached": false,
+  "objective_threshold": 0.79
+}

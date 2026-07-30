@@ -1,0 +1,11 @@
+{
+  "sequence_length": 30,
+  "n_features": 55,
+  "num_classes": 7,
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "loss_function": "categorical_crossentropy",
+  "metrics": [
+    "accuracy"
+  ]
+}

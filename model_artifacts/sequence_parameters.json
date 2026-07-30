@@ -1,0 +1,6 @@
+{
+  "sequence_length": 30,
+  "overlap": 0.6,
+  "num_sequences": 3331,
+  "step_size": 12
+}

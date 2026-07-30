@@ -1,0 +1,26 @@
+{
+  "dataset_info": {
+    "original_shape": [
+      40000,
+      38
+    ],
+    "processed_shape": [
+      40000,
+      59
+    ],
+    "num_classes": 7,
+    "sequence_length": 30
+  },
+  "preprocessing_steps": [
+    "missing_value_imputation",
+    "feature_engineering",
+    "categorical_encoding",
+    "normalization",
+    "sequence_creation",
+    "smote_balancing"
+  ],
+  "model_architecture": "CNN-LSTM-Attention",
+  "training_completed": true,
+  "artifacts_saved": true,
+  "artifacts_location": "model_artifacts"
+}

@@ -1,0 +1,21 @@
+{
+  "train_size": [
+    2331,
+    30,
+    55
+  ],
+  "val_size": [
+    333,
+    30,
+    55
+  ],
+  "test_size": [
+    667,
+    30,
+    55
+  ],
+  "test_split_ratio": 0.2,
+  "val_split_ratio": 0.125,
+  "stratified": true,
+  "random_state": 42
+}

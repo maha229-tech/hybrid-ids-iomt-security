@@ -1,0 +1,23 @@
+{
+  "sequence_shape": [
+    3331,
+    30,
+    55
+  ],
+  "target_shape": [
+    3331,
+    7
+  ],
+  "num_classes": 7,
+  "num_features": 55,
+  "sequence_length": 30,
+  "sequence_class_distribution": {
+    "0": 892,
+    "1": 406,
+    "2": 381,
+    "3": 427,
+    "4": 431,
+    "5": 394,
+    "6": 400
+  }
+}

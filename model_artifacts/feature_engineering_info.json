@@ -1,0 +1,32 @@
+{
+  "created_features": [
+    "blood_pressure_ratio",
+    "cardiovascular_stress",
+    "respiratory_efficiency",
+    "eeg_alpha_beta_ratio",
+    "total_packets",
+    "packets_per_second",
+    "fwd_bwd_packet_ratio",
+    "packet_rate_imbalance",
+    "geo_distance_origin",
+    "hour",
+    "day_of_week",
+    "is_weekend",
+    "is_night"
+  ],
+  "feature_formulas": {
+    "blood_pressure_ratio": "blood_pressure_sys / (blood_pressure_dia + 1)",
+    "cardiovascular_stress": "(heart_rate * blood_pressure_sys) / 10000",
+    "respiratory_efficiency": "(spo2_level * respiration_rate) / 100",
+    "eeg_alpha_beta_ratio": "eeg_alpha_power / (eeg_beta_power + 0.001)",
+    "total_packets": "fwd_pkts_tot + bwd_pkts_tot",
+    "packets_per_second": "total_packets / (flow_duration + 1)",
+    "fwd_bwd_packet_ratio": "fwd_pkts_tot / (bwd_pkts_tot + 1)",
+    "packet_rate_imbalance": "abs(fwd_pkts_per_sec - bwd_pkts_per_sec)",
+    "geo_distance_origin": "sqrt(latitude^2 + longitude^2)",
+    "hour": "timestamp.dt.hour",
+    "day_of_week": "timestamp.dt.dayofweek",
+    "is_weekend": "(day_of_week >= 5).astype(int)",
+    "is_night": "((hour >= 22) | (hour <= 6)).astype(int)"
+  }
+}

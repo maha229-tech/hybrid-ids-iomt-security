@@ -1,0 +1,15 @@
+{
+  "k_neighbors": 5,
+  "random_state": 42,
+  "original_train_size": [
+    2331,
+    30,
+    55
+  ],
+  "smote_train_size": [
+    4368,
+    30,
+    55
+  ],
+  "min_class_samples": 267
+}

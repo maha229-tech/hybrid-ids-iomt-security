@@ -1,0 +1,20 @@
+{
+  "early_stopping": {
+    "monitor": "val_accuracy",
+    "patience": 25,
+    "restore_best_weights": true,
+    "mode": "max"
+  },
+  "reduce_lr": {
+    "monitor": "val_accuracy",
+    "factor": 0.3,
+    "patience": 8,
+    "min_lr": 1e-06,
+    "mode": "max"
+  },
+  "checkpoint": {
+    "monitor": "val_accuracy",
+    "save_best_only": true,
+    "mode": "max"
+  }
+}

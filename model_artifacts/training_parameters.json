@@ -1,0 +1,11 @@
+{
+  "epochs": 100,
+  "batch_size": 64,
+  "validation_data": true,
+  "class_weight": true,
+  "callbacks": [
+    "early_stopping",
+    "reduce_lr",
+    "checkpoint"
+  ]
+}
