@@ -1,4 +1,3 @@
-# hybrid-ids-iomt-security
 # Hybrid Intrusion Detection System for Medical IoT (IoMT) Networks
 
 A real-time intrusion detection system combining XGBoost (instantaneous detection) with a CNN-BiLSTM-Attention model (sequential analysis) to secure connected medical sensor networks (IoMT). The pipeline simulates biomedical and network data streams over MQTT, applies hybrid detection, then stores and visualizes results via InfluxDB and Grafana.
