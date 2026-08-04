@@ -1,27 +1,29 @@
 # hybrid-ids-iomt-security
-Système Hybride de Détection d'Intrusion pour Réseaux IoT Médicaux (IoMT)
+# Hybrid Intrusion Detection System for Medical IoT (IoMT) Networks
 
-Système de détection d'intrusion en temps réel combinant XGBoost (détection instantanée) et un modèle CNN-BiLSTM-Attention (analyse séquentielle) pour sécuriser des réseaux de capteurs médicaux connectés (IoMT). Le pipeline simule des flux de données biomédicales et réseau via MQTT, applique une détection hybride, puis stocke et visualise les résultats via InfluxDB et Grafana.
+A real-time intrusion detection system combining XGBoost (instantaneous detection) with a CNN-BiLSTM-Attention model (sequential analysis) to secure connected medical sensor networks (IoMT). The pipeline simulates biomedical and network data streams over MQTT, applies hybrid detection, then stores and visualizes results via InfluxDB and Grafana.
 
-Projet réalisé dans le cadre d'un Mémoire de Master (Big Data & Cloud Computing) : IDS intelligent hybride pour la sécurité en temps réel des réseaux IoT médicaux.
+Project developed as part of a Master's thesis (Big Data & Cloud Computing): *A hybrid intelligent IDS for the real-time security of medical IoT networks.*
 
-Résultats clés
-97,8% de précision sur 7 classes d'attaques
-Latence < 200 ms pour la détection instantanée
-Architecture hybride : détection immédiate (XGBoost) + confirmation contextuelle (CNN-BiLSTM-Attention sur séquences temporelles)
-Architecture du pipeline
+## Key Results
+- 96.26% accuracy across 7 attack classes
+- Latency < 200 ms for instantaneous detection
+- Hybrid architecture: immediate detection (XGBoost) + contextual confirmation (CNN-BiLSTM-Attention on temporal sequences)
+
+## Pipeline Architecture
+```
 ┌─────────────────┐      ┌──────────────────────┐
 │  second_step.py │ ───► │ iot_complete_realistic.csv │
-│ (génération     │      │  (dataset synthétique) │
-│  dataset)       │      └──────────────────────┘
+│ (dataset        │      │  (synthetic dataset) │
+│  generation)    │      └──────────────────────┘
 └─────────────────┘                │
                                    ▼
                    ┌───────────────┴───────────────┐
-                   ▼                                ▼
+                   ▼                               ▼
          ┌────────────────────┐         ┌─────────────────────────┐
          │  code_xgboost.py   │         │      test3.py           │
-         │  (entraînement     │         │  (entraînement          │
-         │   XGBoost)         │         │   CNN-BiLSTM-Attention) │
+         │  (XGBoost          │         │  (CNN-BiLSTM-Attention  │
+         │   training)        │         │   training)             │
          └────────────────────┘         └─────────────────────────┘
                     │                                │
                     ▼                                ▼
@@ -31,12 +33,12 @@ Architecture du pipeline
 
 ┌─────────────────┐   MQTT   ┌─────────────────────────┐
 │  publisher.py   │ ───────► │  mqtt_to_influxdb.py     │
-│  (simulateur de │  topic:  │  (consumer hybride)       │
-│   capteurs IoMT)│  iot/    │  - Détection instantanée  │
+│  (IoMT sensor   │  topic:  │  (hybrid consumer)        │
+│   simulator)    │  iot/    │  - Instantaneous detection │
 └─────────────────┘  medical/│    (XGBoost)               │
-                      sensors│  - Analyse séquentielle    │
+                      sensors│  - Sequential analysis     │
                              │    (CNN-BiLSTM-Attention)  │
-                             │  - Corrélation des résultats│
+                             │  - Result correlation      │
                              └─────────────────────────┘
                                               │
                                               ▼
@@ -47,133 +49,141 @@ Architecture du pipeline
                                               ▼
                                      ┌─────────────────┐
                                      │     Grafana     │
-                                     │  (visualisation)│
+                                     │  (visualization) │
                                      └─────────────────┘
-Structure du projet
+```
+
+## Project Structure
+```
 Projet_Master/
-├── second_step.py                       # Génération du dataset synthétique IoMT
-├── code_xgboost.py                      # Entraînement du détecteur XGBoost
-├── test3.py                             # Entraînement du modèle CNN-BiLSTM-Attention
-├── publisher.py                         # Simulateur MQTT de capteurs médicaux IoT
-├── mqtt_to_influxdb.py                  # Consumer hybride (inférence + InfluxDB)
-├── iot_complete_realistic.csv           # Dataset généré (40 000 lignes, 500 patients)
+├── second_step.py                       # Synthetic IoMT dataset generation
+├── code_xgboost.py                      # XGBoost detector training
+├── test3.py                             # CNN-BiLSTM-Attention model training
+├── publisher.py                         # MQTT simulator for medical IoT sensors
+├── mqtt_to_influxdb.py                  # Hybrid consumer (inference + InfluxDB)
+├── iot_complete_realistic.csv           # Generated dataset (40,000 rows, 500 patients)
 │
-├── xgboost_instant_detector.pkl         # Modèle XGBoost entraîné
-├── scaler_instant.pkl                   # RobustScaler (pipeline XGBoost)
-├── label_encoders_instant.pkl           # LabelEncoders (pipeline XGBoost)
-├── feature_columns_instant.pkl          # Liste des features (pipeline XGBoost)
+├── xgboost_instant_detector.pkl         # Trained XGBoost model
+├── scaler_instant.pkl                   # RobustScaler (XGBoost pipeline)
+├── label_encoders_instant.pkl           # LabelEncoders (XGBoost pipeline)
+├── feature_columns_instant.pkl          # Feature list (XGBoost pipeline)
 │
-├── advanced_cnn_lstm_attention.keras    # Modèle CNN-BiLSTM-Attention (final)
-├── best_model_advanced.h5               # Meilleur checkpoint (val_accuracy)
-├── feature_scaler.pkl                   # StandardScaler (pipeline CNN-LSTM)
-├── label_encoders.pkl                   # LabelEncoders (pipeline CNN-LSTM)
-├── feature_columns.pkl                  # Liste des features (pipeline CNN-LSTM)
-├── X_seq.npy / y_seq_cat.npy            # Séquences pré-calculées (fenêtres de 30 pas)
+├── advanced_cnn_lstm_attention.keras    # CNN-BiLSTM-Attention model (final)
+├── best_model_advanced.h5               # Best checkpoint (val_accuracy)
+├── feature_scaler.pkl                   # StandardScaler (CNN-LSTM pipeline)
+├── label_encoders.pkl                   # LabelEncoders (CNN-LSTM pipeline)
+├── feature_columns.pkl                  # Feature list (CNN-LSTM pipeline)
+├── X_seq.npy / y_seq_cat.npy            # Precomputed sequences (30-step windows)
 │
-├── model_artifacts/                     # Métadonnées d'entraînement (historique, métriques, config)
-├── catboost_info/                       # Logs d'expérimentation
+├── model_artifacts/                     # Training metadata (history, metrics, config)
+├── catboost_info/                       # Experiment logs
 └── requirements.txt
-Dataset
+```
 
-Généré par second_step.py : 40 000 lignes, 500 patients simulés, données biomédicales (fréquence cardiaque, SpO2, ECG, EEG, glycémie, etc.) et réseau (paquets, entropie, score d'anomalie), réparties sur 7 classes :
+## Dataset
 
-Classe	Description
-Normal	Trafic normal
-DoS/DDoS	Déni de service
-Eavesdropping	Écoute passive/active
-Injection	Corruption des données biomédicales
-Selective Forwarding	Perte sélective de paquets
-Sinkhole	Absorption du trafic
-MitM	Attaque de l'homme du milieu
+Generated by `second_step.py`: 40,000 rows, 500 simulated patients, biomedical data (heart rate, SpO2, ECG, EEG, blood glucose, etc.) and network data (packets, entropy, anomaly score), spread across 7 classes:
 
-Chaque type d'attaque possède une signature statistique distincte (plage d'anomaly_score dédiée, effets différenciés sur les données réseau vs. biomédicales) afin d'améliorer la séparabilité des classes.
+| Class | Description |
+|---|---|
+| Normal | Normal traffic |
+| DoS/DDoS | Denial of service |
+| Eavesdropping | Passive/active eavesdropping |
+| Injection | Biomedical data corruption |
+| Selective Forwarding | Selective packet dropping |
+| Sinkhole | Traffic absorption |
+| MitM | Man-in-the-middle attack |
 
-Prérequis
-bash
-# Broker MQTT (exemple avec Mosquitto)
+Each attack type has a distinct statistical signature (dedicated `anomaly_score` range, differentiated effects on network vs. biomedical data) to improve class separability.
+
+## Requirements
+```bash
+# MQTT broker (example with Mosquitto)
 sudo apt install mosquitto mosquitto-clients
 
-# InfluxDB (v2.x) et Grafana installés et lancés en local
-# InfluxDB : http://localhost:8086
-# Grafana  : http://localhost:3000
-Dépendances Python
-bash
+# InfluxDB (v2.x) and Grafana installed and running locally
+# InfluxDB: http://localhost:8086
+# Grafana:  http://localhost:3000
+```
+
+### Python Dependencies
+```bash
 pip install -r requirements.txt
+```
+Main libraries: pandas, numpy, scikit-learn, xgboost, tensorflow, imbalanced-learn, joblib, paho-mqtt, influxdb-client.
 
-Principales bibliothèques : pandas, numpy, scikit-learn, xgboost, tensorflow, imbalanced-learn, joblib, paho-mqtt, influxdb-client.
+### InfluxDB Configuration
 
-Configuration InfluxDB
+Before running `mqtt_to_influxdb.py`, set your own credentials (environment variables recommended rather than hardcoding them):
 
-Avant de lancer mqtt_to_influxdb.py, configure tes propres identifiants (variables d'environnement recommandées plutôt qu'en dur dans le code) :
-
-bash
+```bash
 export INFLUXDB_URL="http://localhost:8086"
-export INFLUXDB_TOKEN="ton_token"
-export INFLUXDB_ORG="ton_organisation"
+export INFLUXDB_TOKEN="your_token"
+export INFLUXDB_ORG="your_organization"
 export INFLUXDB_BUCKET="iot_health"
-Utilisation
-1. Générer le dataset
-bash
+```
+
+## Usage
+
+### 1. Generate the dataset
+```bash
 python second_step.py
+```
+Produces `iot_complete_realistic.csv` (40,000 rows, 7 attack classes, 500 patients).
 
-Produit iot_complete_realistic.csv (40 000 lignes, 7 classes d'attaques, 500 patients).
+### 2. Train the models
 
-2. Entraîner les modèles
-
-Détecteur instantané (XGBoost)
-
-bash
+**Instantaneous detector (XGBoost)**
+```bash
 python code_xgboost.py
+```
+Preprocessing (encoding, RobustScaler normalization), multi-class XGBoost training, evaluation (classification report, confusion matrix). Saves `xgboost_instant_detector.pkl` and associated artifacts.
 
-Prétraitement (encodage, normalisation RobustScaler), entraînement XGBoost multi-classes, évaluation (classification report, matrice de confusion). Sauvegarde xgboost_instant_detector.pkl et les artefacts associés.
-
-Détecteur séquentiel (CNN-BiLSTM-Attention)
-
-bash
+**Sequential detector (CNN-BiLSTM-Attention)**
+```bash
 python test3.py
+```
+Feature engineering (cardiovascular, respiratory, and network ratios), temporal sequence creation (30-step windows, 60% overlap), SMOTE rebalancing, training of a hybrid CNN + BiLSTM + Multi-Head Attention model. Saves `best_model_advanced.h5` and `advanced_cnn_lstm_attention.keras`.
 
-Feature engineering (ratios cardiovasculaires, respiratoires, réseau), création de séquences temporelles (fenêtres de 30 pas, chevauchement 60%), rééquilibrage SMOTE, entraînement d'un modèle hybride CNN + BiLSTM + Multi-Head Attention. Sauvegarde best_model_advanced.h5 et advanced_cnn_lstm_attention.keras.
+### 3. Run the real-time simulation
 
-3. Lancer la simulation temps réel
-
-Terminal 1 — Démarrer le broker MQTT (si pas déjà lancé)
-
-bash
+**Terminal 1 — Start the MQTT broker (if not already running)**
+```bash
 mosquitto -v
+```
 
-Terminal 2 — Lancer le publisher (simulateur de capteurs IoMT)
-
-bash
+**Terminal 2 — Launch the publisher (IoMT sensor simulator)**
+```bash
 python publisher.py
+```
+Publishes realistic JSON messages on the `iot/medical/sensors` topic (85% normal traffic, short and realistic contextual attacks, variable severity).
 
-Publie des messages JSON réalistes sur le topic iot/medical/sensors (85% trafic normal, attaques contextuelles courtes et réalistes, sévérité variable).
-
-Terminal 3 — Lancer le consumer hybride
-
-bash
+**Terminal 3 — Launch the hybrid consumer**
+```bash
 python mqtt_to_influxdb.py
+```
+Subscribes to the MQTT topic, applies the exact preprocessing used in the training scripts, and performs:
+- Instantaneous detection via XGBoost (message by message)
+- Sequential analysis via CNN-BiLSTM-Attention (once the 30-message buffer is full)
+- Correlation of both results for a final decision
+- Writing to InfluxDB (biomedical measurements, confidence scores, final decision)
 
-S'abonne au topic MQTT, applique le prétraitement exact des scripts d'entraînement, effectue :
+### 4. Visualize in Grafana
 
-Détection instantanée via XGBoost (message par message)
-Analyse séquentielle via CNN-BiLSTM-Attention (dès que le buffer de 30 messages est plein)
-Corrélation des deux résultats pour une décision finale
-Écriture dans InfluxDB (mesures biomédicales, scores de confiance, décision finale)
-4. Visualiser dans Grafana
+Connect Grafana to your InfluxDB data source (bucket `iot_health`), then build dashboards to visualize:
+- Real-time biomedical metrics per patient
+- XGBoost / CNN-LSTM confidence scores
+- Alerts and final decisions per attack type
 
-Connecte Grafana à ta source de données InfluxDB (bucket iot_health), puis crée des dashboards pour visualiser :
+## Methodology
+- **Identical preprocessing for training/inference**: `mqtt_to_influxdb.py` reproduces the exact cleaning, encoding, and normalization steps used in `code_xgboost.py` and `test3.py`, to avoid any drift between training and production.
+- **Two-level detection**: the XGBoost model provides an immediate response (latency < 200ms); the CNN-BiLSTM-Attention model confirms or refines the decision by leveraging temporal context (30 consecutive messages), reducing isolated false positives.
+- **Class rebalancing**: SMOTE applied to training sequences, combined with class weighting (`class_weight`), to limit bias toward the majority class (Normal).
 
-Les métriques biomédicales en temps réel par patient
-Les scores de confiance XGBoost / CNN-LSTM
-Les alertes et décisions finales par type d'attaque
-Méthodologie
-Prétraitement identique training/inférence : mqtt_to_influxdb.py reproduit exactement les étapes de nettoyage, d'encodage et de normalisation utilisées dans code_xgboost.py et test3.py, afin d'éviter tout écart (data drift) entre entraînement et production.
-Détection à deux niveaux : le modèle XGBoost apporte une réponse immédiate (latence < 200ms) ; le modèle CNN-BiLSTM-Attention confirme ou nuance la décision en exploitant le contexte temporel (30 messages consécutifs), réduisant les faux positifs isolés.
-Rééquilibrage des classes : SMOTE appliqué sur les séquences d'entraînement + pondération des classes (class_weight) pour limiter le biais vers la classe majoritaire (Normal).
-Limitations et pistes d'amélioration
-Dataset actuellement synthétique (généré par simulation statistique) — une validation sur données réelles ou semi-réelles (capture réseau IoMT) renforcerait la généralisation.
-Le score anomaly_score par classe influence fortement la séparabilité des classes ; une évaluation en conditions plus bruitées est nécessaire.
-Passage à un déploiement conteneurisé (Docker Compose : MQTT broker + InfluxDB + Grafana + consumer) envisageable pour faciliter la reproductibilité.
-Auteure
+## Limitations and Future Work
+- The dataset is currently synthetic (generated via statistical simulation) — validation on real or semi-real data (IoMT network capture) would strengthen generalization.
+- The per-class `anomaly_score` strongly influences class separability; evaluation under noisier conditions is needed.
+- Containerized deployment (Docker Compose: MQTT broker + InfluxDB + Grafana + consumer) could be considered to improve reproducibility.
 
-Maha Sabki — Master Big Data & Cloud Computing, Université Ibn Tofail, Kénitra LinkedIn
+## Author
+Maha Sabki — Master's in Big Data & Cloud Computing, Ibn Tofail University, Kenitra
